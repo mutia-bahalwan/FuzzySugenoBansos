@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fuzzy Sugeno Bansos</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #f5f6fa;
+            font-family: "Segoe UI", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            width: 420px;
+            padding: 30px;
+            border-radius: 14px;
+            background: #ffffff;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 23px;
+            color: #1e2a38;
+        }
+
+        p.sub {
+            text-align: center;
+            color: #6d7c91;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #1e2a38;
+            font-weight: 500;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .info {
+            margin: 0 0 10px 0;
+            font-size: 12px;
+            color: #6d7c91;
+            font-style: italic;
+        }
+
+
+        input {
+            width:94%;
+            padding: 11px;
+            border-radius: 8px;
+            border: 1px solid #ccd2da;
+            margin-bottom: 15px;
+            font-size: 14px;
+            background: #fdfdfd;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #295ba7;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #295ba7;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #204a86;
+        }
+
+        .result-box {
+            background: #f0f3f8;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 25px;
+            border-left: 3px solid #295ba7;
+        }
+
+        .result-box p {
+            margin: 6px 0;
+            font-size: 14px;
+            color: #1e2a38;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>Fuzzy Sugeno Bansos</h1>
+    <p class="sub">Penilaian kelayakan bantuan sosial</p>
+
+    <form action="/result/" method="POST">
+        {% csrf_token %}
+
+        <label>Pendapatan (0–10)</label>
+        <p class="info">Diisi dalam juta rupiah. Contoh: 3 = Rp 3.000.000</p>
+        <input type="number" name="income" step="0.01" min="0" max="10" required>
+
+        <label>Tanggungan Keluarga (0–8)</label>
+        <p class="info">Jumlah anggota keluarga yang ditanggung</p>
+        <input type="number" name="family"min="0" max="8" required>
+
+        <label>Kondisi Rumah (1–5)</label>
+        <p class="info">
+            Skala 1–5 (1 = sangat baik, 5 = sangat buruk)
+        </p>
+        <input type="number" name="house" min="1" max="5" required>
+
+
+        <button type="submit">Hitung</button>
+    </form>
+
+    {% if result %}
+    <div class="result-box">
+        <p><strong>Nilai Sugeno:</strong> {{ result }}</p>
+        <p><strong>Keputusan:</strong> {{ decision }}</p>
+        <p><strong>Saran:</strong> {{ suggestion }}</p>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

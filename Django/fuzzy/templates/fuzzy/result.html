@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hasil Perhitungan Sugeno</title>
+    <style>
+        body {
+            margin: 0;
+            background: #f5f6fa;
+            font-family: "Segoe UI", sans-serif;
+        }
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+        .card {
+            padding: 30px;
+            border-radius: 14px;
+            background: #ffffff;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        .box {
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #295ba7;
+            margin-bottom: 20px;
+            text-align: left;
+            color: #1e2a38;
+        }
+
+        .box.tidak-layak {
+            background: #f8d7da9f;  /* merah muda */
+            border-left-color: #fb7b88ff;
+        }
+
+        .box.dipertimbangkan {
+            background: #fff3cd63;  /* kuning muda */
+            border-left-color: #ffc107;
+        }
+
+        .box.layak {
+            background: #d4edda62;  /* hijau muda */
+            border-left-color: #6ac980ff;
+        }
+
+
+        h2, h3 { text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background: #295ba7; color: white; }
+        a { display: inline-block; margin-top: 20px; padding: 10px 18px; background: #295ba7; color: white; text-decoration: none; border-radius: 8px; }
+        a:hover { background: #204a86; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="card">
+        <h2>Hasil Perhitungan Sugeno</h2>
+        <div class="box
+            {% if data.kategori == 'Tidak Layak' %}tidak-layak{% elif data.kategori == 'Dipertimbangkan' %}dipertimbangkan{% else %}layak{% endif %}">
+            <p><strong>Nilai Sugeno:</strong> {{ data.hasil|floatformat:2 }}</p>
+            <p><strong>Status:</strong> {{ data.kategori }}</p>
+        </div>
+    </div>
+    <!-- Card Hasil Perhitungan -->
+    <div class="card">
+
+        <h3>Derajat Keanggotaan Input</h3>
+        <table>
+            <tr>
+                <th>Input</th>
+                <th>Low / Few / Bad</th>
+                <th>Mid</th>
+                <th>High / Many / Good</th>
+            </tr>
+            <tr>
+                <td>Pendapatan</td>
+                <td>{{ data.input_miu.income.0|floatformat:2 }}</td>
+                <td>{{ data.input_miu.income.1|floatformat:2 }}</td>
+                <td>{{ data.input_miu.income.2|floatformat:2 }}</td>
+            </tr>
+            <tr>
+                <td>Tanggungan Keluarga</td>
+                <td>{{ data.input_miu.family.0|floatformat:2 }}</td>
+                <td>{{ data.input_miu.family.1|floatformat:2 }}</td>
+                <td>{{ data.input_miu.family.2|floatformat:2 }}</td>
+            </tr>
+            <tr>
+                <td>Kondisi Rumah</td>
+                <td>{{ data.input_miu.house.0|floatformat:2 }}</td>
+                <td>{{ data.input_miu.house.1|floatformat:2 }}</td>
+                <td>{{ data.input_miu.house.2|floatformat:2 }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Card Detail Rules -->
+    <div class="card">
+        <h2>Detail 27 Rules</h2>
+        <table>
+            <tr>
+                <th>Rule</th>
+                <th>μ Income</th>
+                <th>μ Family</th>
+                <th>μ House</th>
+                <th>α-predicate (min)</th>
+                <th>Zi (Singleton)</th>
+                <th>Weighted (α*Zi)</th>
+            </tr>
+            {% for r in data.rules %}
+            <tr>
+                <td>{{ r.rule }}</td>
+                <td>{{ r.μ_income|floatformat:2 }}</td>
+                <td>{{ r.μ_family|floatformat:2 }}</td>
+                <td>{{ r.μ_house|floatformat:2 }}</td>
+                <td>{{ r.μ_rule|floatformat:2 }}</td>
+                <td>{{ r.z }}</td>
+                <td>{{ r.weighted|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <p><strong>Jumlah Weighted:</strong> {{ data.sum_weighted|floatformat:2 }}</p>
+        <p><strong>Jumlah α-predicate:</strong> {{ data.sum_miu|floatformat:2 }}</p>
+        <a href="/">Kembali</a>
+    </div>
+
+    
+</div>
+</body>
+</html>
